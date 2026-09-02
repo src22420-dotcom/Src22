@@ -1,3 +1,7 @@
+pyrofork==2.3.45
+tgcrypto==1.2.5
+motor==3.7.1
+pymongo==4.17.0
 gunicorn==23.0.0
 setuptools==80.9.0
 Flask==3.1.2
