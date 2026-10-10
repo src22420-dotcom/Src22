@@ -15,7 +15,7 @@ from bot import TechVJUser
 
 class batch_temp(object):
     IS_BATCH = {}
-    USER_DESTINATIONS = {} # NEW: यूज़र के चैनल्स सेव करने के लिए
+    USER_DESTINATIONS = {} # यूज़र के मल्टीपल चैनल्स सेव करने के लिए
 
 async def downstatus(client, statusfile, message, chat):
     while True:
@@ -52,34 +52,135 @@ def progress(current, total, message, type):
     with open(f'{message.id}{type}status.txt', "w") as fileup:
         fileup.write(f"{current * 100 / total:.1f}%")
 
+# ==========================================
+# PRO UI & TEXT VARIABLES
+# ==========================================
+
+HELP_TEXT = """╭━━━ 🛠 𝗛𝗢𝗪 𝗧𝗢 𝗨𝗦𝗘 𝗕𝗢𝗧 🛠 ━━━╮
+
+💡 𝗦𝗧𝗘𝗣-𝗕𝗬-𝗦𝗧𝗘𝗣 𝗚𝗨𝗜𝗗𝗘:
+
+𝟭. 🔐 𝗟𝗼𝗴𝗶𝗻 (𝗠𝗮𝗻𝗱𝗮𝘁𝗼𝗿𝘆)
+➜ Send `/login` to connect your account. 
+*(This allows the bot to access restricted channels you are in).*
+
+𝟮. 📡 𝗦𝗲𝘁𝘂𝗽 𝗔𝘂𝘁𝗼-𝗨𝗽𝗹𝗼𝗮𝗱 𝗖𝗵𝗮𝗻𝗻𝗲𝗹𝘀
+➜ Forward ANY message from your target channel to this bot.
+➜ Bot will save it. You can add multiple channels!
+*(Note: Make sure Bot is Admin in those channels)*
+
+𝟯. 📥 𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱 𝗖𝗼𝗻𝘁𝗲𝗻𝘁
+➜ Send the post link from the restricted channel.
+*(Example: `https://t.me/c/1234567/89`)*
+➜ For Batch Download: Send link like `.../89-100`.
+
+𝟰. 🗑 𝗖𝗹𝗲𝗮𝗿 𝗖𝗵𝗮𝗻𝗻𝗲𝗹𝘀 𝗟𝗶𝘀𝘁
+➜ Send `/clear` if you want to reset your destination channels list.
+
+𝟱. 🛑 𝗖𝗮𝗻𝗰𝗲𝗹 𝗢𝗻𝗴𝗼𝗶𝗻𝗴 𝗧𝗮𝘀𝗸
+➜ Send `/cancel` to stop a running batch process.
+
+╰━━━ ⚙️ 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗣𝗥𝗢 Jaat ⚙️ ━━━╯"""
+
+def get_welcome_text(first_name):
+    return f"""╭━━━ ⚡ 𝗥𝗘𝗦 𝗖𝗢𝗡𝗧𝗘𝗡𝗧 𝗦𝗔𝗩𝗘𝗥 ⚡ ━━━╮
+
+👋 𝗪𝗘𝗟𝗖𝗢𝗠𝗘, {first_name}!
+
+🤖 𝗬𝗢𝗨𝗥 𝗔𝗟𝗟-𝗜𝗡-𝗢𝗡𝗘 𝗖𝗢𝗡𝗧𝗘𝗡𝗧 𝗧𝗢𝗢𝗟 🚀
+
+┏━━━━━━━━━━━━━━━━━━━━┓
+┃ 💎 𝗣𝗥𝗢 𝗕𝗢𝗧 𝗙𝗘𝗔𝗧𝗨𝗥𝗘𝗦
+┣━━━━━━━━━━━━━━━━━━━━┫
+┃ 📡 Multiple Channels Add
+┃ ✏️ Caption Edit
+┃ 📥 Res. Content Save
+┃ 🔄 Content Forward & Manage
+┃ 📂 File Organization
+┃ ⚡ Fast Content Processing
+┗━━━━━━━━━━━━━━━━━━━━┛
+
+🎯 𝗦𝗜𝗠𝗣𝗟𝗘 𝗪𝗢𝗥𝗞𝗙𝗟𝗢𝗪
+➜ Select your option
+➜ Manage your content
+➜ Save & organize supported files
+
+━━━━━━━━━━━━━━━━━━━━
+
+🔥 𝗢𝗡𝗘 𝗕𝗢𝗧 • 𝗠𝗨𝗟𝗧𝗜𝗣𝗟𝗘 𝗙𝗘𝗔𝗧𝗨𝗥𝗘𝗦
+
+👇 𝗚𝗘𝗧 𝗦𝗧𝗔𝗥𝗧𝗘𝗗 𝗡𝗢𝗪 👇
+
+╰━━━ ⚙️ 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗣𝗥𝗢 Jaat ⚙️ ━━━╯"""
+
+# ==========================================
+# COMMAND HANDLERS
+# ==========================================
+
 # start command
 @Client.on_message(filters.command(["start"]))
 async def send_start(client: Client, message: Message):
     if not await db.is_user_exist(message.from_user.id):
         await db.add_user(message.from_user.id, message.from_user.first_name)
-    buttons = [[
-        InlineKeyboardButton("❣️ Developer", url = "https://t.me/kingvj01")
-    ],[
-        InlineKeyboardButton('🔍 sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ', url='https://t.me/vj_bot_disscussion'),
-        InlineKeyboardButton('🤖 ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ', url='https://t.me/vj_bots')
-    ]]
+    
+    buttons = [
+        [
+            InlineKeyboardButton("❣️ Dᴇᴠᴇʟᴏᴘᴇʀ", url="https://t.me/kingvj01"),
+            InlineKeyboardButton("🤖 Uᴘᴅᴀᴛᴇs", url="https://t.me/vj_bots")
+        ],
+        [
+            InlineKeyboardButton("🔒 Sᴜᴘᴘᴏʀᴛ Gʀᴏᴜᴘ", url="https://t.me/vj_bot_disscussion")
+        ],
+        [
+            InlineKeyboardButton("❓ ʜᴏᴡ ᴛᴏ ᴜsᴇ (ʜᴇʟᴘ)", callback_data="show_help")
+        ]
+    ]
     reply_markup = InlineKeyboardMarkup(buttons)
+    first_name = message.from_user.first_name if message.from_user.first_name else "User"
+
     await client.send_message(
         chat_id=message.chat.id, 
-        text=f"<b>👋 Hi {message.from_user.mention}, I am Save Restricted Content Bot.\n\n"
-             f"🔥 NEW FEATURE: Forward a message from your channel to add it for auto-upload!\n\n"
-             f"Know how to use bot by - /help</b>", 
+        text=get_welcome_text(first_name), 
         reply_markup=reply_markup, 
         reply_to_message_id=message.id
     )
-    return
 
 # help command
 @Client.on_message(filters.command(["help"]))
 async def send_help(client: Client, message: Message):
     await client.send_message(
         chat_id=message.chat.id, 
-        text=f"{HELP_TXT}"
+        text=HELP_TEXT,
+        reply_to_message_id=message.id
+    )
+
+# Callback Query Handler (Help Button)
+@Client.on_callback_query(filters.regex("show_help"))
+async def help_callback(client: Client, query):
+    await query.message.edit_text(
+        text=HELP_TEXT,
+        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Bᴀᴄᴋ", callback_data="back_start")]])
+    )
+
+# Callback Query Handler (Back Button)
+@Client.on_callback_query(filters.regex("back_start"))
+async def back_callback(client: Client, query):
+    first_name = query.from_user.first_name if query.from_user.first_name else "User"
+    buttons = [
+        [
+            InlineKeyboardButton("❣️ Dᴇᴠᴇʟᴏᴘᴇʀ", url="https://t.me/kingvj01"),
+            InlineKeyboardButton("🤖 Uᴘᴅᴀᴛᴇs", url="https://t.me/vj_bots")
+        ],
+        [
+            InlineKeyboardButton("🔒 Sᴜᴘᴘᴏʀᴛ Gʀᴏᴜᴘ", url="https://t.me/vj_bot_disscussion")
+        ],
+        [
+            InlineKeyboardButton("❓ ʜᴏᴡ ᴛᴏ ᴜsᴇ (ʜᴇʟᴘ)", callback_data="show_help")
+        ]
+    ]
+    await query.message.edit_text(
+        text=get_welcome_text(first_name),
+        reply_markup=InlineKeyboardMarkup(buttons)
     )
 
 # cancel command
@@ -91,7 +192,7 @@ async def send_cancel(client: Client, message: Message):
         text="**Batch Successfully Cancelled.**"
     )
 
-# --- NEW: चैनल ऐड करने के लिए फॉरवर्ड मैसेज हैंडलर ---
+# चैनल ऐड करने के लिए फॉरवर्ड मैसेज हैंडलर
 @Client.on_message(filters.forwarded & filters.private)
 async def add_target_channel(client: Client, message: Message):
     if message.forward_from_chat and message.forward_from_chat.type == enums.ChatType.CHANNEL:
@@ -116,12 +217,16 @@ async def add_target_channel(client: Client, message: Message):
     else:
         await message.reply_text("❌ कृपया किसी चैनल (Channel) से मैसेज फॉरवर्ड करें।")
 
-# --- NEW: चैनल लिस्ट क्लियर करने के लिए ---
+# चैनल लिस्ट क्लियर करने के लिए
 @Client.on_message(filters.command(["clear"]) & filters.private)
 async def clear_channels(client: Client, message: Message):
     batch_temp.USER_DESTINATIONS[message.from_user.id] = []
     await message.reply_text("🗑️ **सभी चैनल्स लिस्ट से हटा दिए गए हैं!**\nअब फाइलें सीधे यहीं (Bot के इनबॉक्स में) आएँगी।")
 
+
+# ==========================================
+# MAIN CORE (DOWNLOAD & UPLOAD)
+# ==========================================
 
 @Client.on_message(filters.text & filters.private)
 async def save(client: Client, message: Message):
@@ -197,7 +302,6 @@ async def save(client: Client, message: Message):
             # public
             else:
                 username = datas[3]
-
                 try:
                     msg = await client.get_messages(username, msgid)
                 except UsernameNotOccupied: 
@@ -222,18 +326,17 @@ async def save(client: Client, message: Message):
         batch_temp.IS_BATCH[message.from_user.id] = True
 
 
-# handle private (UPGRADED VERSION)
+# handle private (FULLY UPGRADED VERSION)
 async def handle_private(client: Client, acc, message: Message, chatid: int, msgid: int):
     msg: Message = await acc.get_messages(chatid, msgid)
     if msg.empty: return 
     msg_type = get_message_type(msg)
     if not msg_type: return 
     
-    # --- UPGRADE 1: डायनामिक चैनल सिलेक्शन ---
+    # --- डायनामिक चैनल सिलेक्शन ---
     user_id = message.from_user.id
     dest_chats = batch_temp.USER_DESTINATIONS.get(user_id, [])
     
-    # अगर यूज़र ने कोई चैनल फॉरवर्ड नहीं किया है, तो फाइल Bot में आएगी (या config वाले में)
     if not dest_chats:
         if CHANNEL_ID:
             try:
@@ -243,25 +346,25 @@ async def handle_private(client: Client, acc, message: Message, chatid: int, msg
         else:
             dest_chats = [message.chat.id]
             
-    primary_chat = dest_chats[0] # फाइल सबसे पहले यहाँ अपलोड होगी
+    primary_chat = dest_chats[0]
 
     if batch_temp.IS_BATCH.get(message.from_user.id): return 
 
-    # --- UPGRADE 2: कैप्शन एडिट (Find & Replace) ---
+    # --- कैप्शन एडिट (Find & Replace) ---
     if msg.caption or (msg_type == "Text" and msg.text):
         text_data = msg.caption if msg.caption else msg.text
         
-        # 🟢 यहाँ सेट करें: {"पुराना नाम": "नया नाम"}
+        # 🟢 यहाँ अपनी मर्ज़ी से वर्ड रिप्लेस करें {"पुराना": "नया"}
         REPLACE_WORDS = {
             "@Tech_VJ": "@YourChannel",
-            "Tech VJ": "Your Name",
-            "t.me/": " " # फालतू लिंक्स हटाने के लिए
+            "Tech VJ": "PRO Jaat",
+            "t.me/": " "
         }
         
         for old_word, new_word in REPLACE_WORDS.items():
             text_data = text_data.replace(old_word, new_word)
             
-        # 🟢 यहाँ सेट करें: जो टेक्स्ट हर मैसेज के लास्ट में ऐड करना है
+        # 🟢 कैप्शन के लास्ट में ऐड होने वाला टेक्स्ट
         CUSTOM_FOOTER = "\n\n**📥 जॉइन करें @YourChannel**"
         text_data = text_data + CUSTOM_FOOTER
         
@@ -358,7 +461,7 @@ async def handle_private(client: Client, acc, message: Message, chatid: int, msg
         for chat in dest_chats[1:]:
             try:
                 await sent_msg.copy(chat)
-                await asyncio.sleep(0.5) # स्पैम से बचने के लिए
+                await asyncio.sleep(0.5)
             except Exception as e:
                 pass
 
@@ -366,7 +469,6 @@ async def handle_private(client: Client, acc, message: Message, chatid: int, msg
         os.remove(f'{message.id}upstatus.txt')
         os.remove(file)
     await client.delete_messages(message.chat.id,[smsg.id])
-
 
 # get the type of message
 def get_message_type(msg: pyrogram.types.messages_and_media.message.Message):
