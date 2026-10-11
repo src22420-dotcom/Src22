@@ -14,9 +14,9 @@ from TechVJ.strings import HELP_TXT
 from bot import TechVJUser
 
 # ==========================================
-# 👑 ADMIN SYSTEM
+# 👑 ADMIN SYSTEM (Yahan Apni ID Daalein)
 # ==========================================
-ADMIN_IDS = [5450796741, 9876543210] # <--- YAHAN APNI NUMBER WALI ID DAALEIN
+ADMIN_IDS = [1234567890, 9876543210] # <--- YAHAN APNI NUMBER WALI ID DAALEIN
 
 # ==========================================
 # TEMPORARY MEMORY DATA
@@ -112,11 +112,11 @@ BUY_PRO_BUTTON = InlineKeyboardMarkup([[InlineKeyboardButton("👑 Buy PRO Code 
 HELP_TEXT = """╭━━━ 🛠 𝗛𝗢𝗪 𝗧𝗢 𝗨𝗦𝗘 𝗕𝗢𝗧 🛠 ━━━╮\n\n💡 𝗦𝗧𝗘𝗣-𝗕𝗬-𝗦𝗧𝗘𝗣 𝗚𝗨𝗜𝗗𝗘:\n\n𝟭. 🔐 𝗟𝗼𝗴𝗶𝗻 (𝗠𝗮𝗻𝗱𝗮𝘁𝗼𝗿𝘆)\n➜ Send `/login` to connect your account. \n\n𝟮. 📡 𝗦𝗲𝘁𝘂𝗽 𝗔𝘂𝘁𝗼-𝗨𝗽𝗹𝗼𝗮𝗱 𝗖𝗵𝗮𝗻𝗻𝗲𝗹𝘀\n➜ Forward ANY message from your target channel to this bot.\n\n𝟯. 📥 𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱 𝗖𝗼𝗻𝘁𝗲𝗻𝘁\n➜ Send the post link from the restricted channel.\n\n𝟰. ✏️ 𝗖𝗮𝗽𝘁𝗶𝗼𝗻 𝗘𝗱𝗶𝘁𝗼𝗿 (𝗔𝘂𝘁𝗼)\n➜ Bot automatically removes unwanted links and replaces old names.\n\n𝟱. 🗑 𝗠𝗮𝗻𝗮𝗴𝗲𝗺𝗲𝗻𝘁\n➜ `/clear` - Reset destination channels list.\n➜ `/cancel` - Stop a running batch process.\n\n╰━━━ ⚙️ 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗣𝗥𝗢 Jaat ⚙️ ━━━╯"""
 
 def get_welcome_text(first_name):
-    return f"""╭━━━ ⚡ 𝗥𝗘𝗦 𝗖𝗢𝗡𝗧𝗘𝗡𝗧 𝗦𝗔𝗩𝗘𝗥 ⚡ ━━━╮\n\n👋 𝗪𝗘𝗟𝗖𝗢𝗠𝗘, {first_name}!\n\n🤖 𝗬𝗢𝗨𝗥 𝗔𝗟𝗟-𝗜𝗡-𝗢𝗡𝗘 𝗖𝗢𝗡𝗧𝗘𝗡𝗧 𝗧𝗢𝗢𝗟 🚀\n\n┏━━━━━━━━━━━━━━━━━━━━┓\n┃ 💎 𝗣𝗥𝗢 𝗕𝗢𝗧 𝗙𝗘𝗔𝗧𝗨𝗥𝗘𝗦\n┣━━━━━━━━━━━━━━━━━━━━┫\n┃ 🔑 Secure Account Login\n┃ 📡 Multiple Channels Add\n┃ ✏️ Auto Caption Editor\n┃ 📥 Res. Content Save\n┃ 🔄 Fast Forward & Bypass\n┃ 📊 Server Stats Tracker\n┗━━━━━━━━━━━━━━━━━━━━┛\n\n🎯 𝗦𝗜𝗠𝗣𝗟𝗘 𝗪𝗢𝗥𝗞𝗙𝗟𝗢𝗪\n➜ 𝗦𝘁𝗲𝗽 𝟭: Send /login to connect.\n➜ 𝗦𝘁𝗲𝗽 𝟮: Forward your channel msg to set destination.\n➜ 𝗦𝘁𝗲𝗽 𝟯: Send restricted links to save!\n\n━━━━━━━━━━━━━━━━━━━━\n\n👇 𝗚𝗘𝗧 𝗦𝗧𝗔𝗥𝗧𝗘𝗗 𝗡𝗢𝗪 👇\n\n╰━━━ ⚙️ 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗣𝗥𝗢 Jaat ⚙️ ━━━╯"""
+    return f"""╭━━━ ⚡ 𝗥𝗘𝗦 𝗖𝗢𝗡𝗧𝗘𝗡𝗧 𝗦𝗔𝗩𝗘𝗥 ⚡ ━━━╮\n\n👋 𝗪𝗘𝗟𝗖𝗢𝗠𝗘, {first_name}!\n\n🤖 𝗬𝗢𝗨𝗥 𝗔𝗟𝗟-𝗜𝗡-𝗢𝗡𝗘 𝗖𝗢𝗡𝗧𝗘𝗡𝗧 𝗧𝗢𝗢𝗟 🚀\n\n┏━━━━━━━━━━━━━━━━━━━━┓\n┃ 💎 𝗣𝗥𝗢 𝗕𝗢𝗧 𝗙𝗘𝗔𝗧𝗨𝗥𝗘𝗦\n┣━━━━━━━━━━━━━━━━━━━━┫\n┃ 🔑 Secure Account Login\n┃ 📡 Multiple Channels Add\n┃ ✏️ Auto Caption Editor\n┃ 📥 Res. Content Save\n┃ 🔄 Fast Forward & Bypass\n┃ 📊 Server Stats Tracker\n┗━━━━━━━━━━━━━━━━━━━━┛\n\n🎯 𝗦𝗜𝗠𝗣𝗟𝗘 𝗪𝗢𝗥𝗞𝗙𝗟𝗢𝗪\n➜ 𝗦𝘁𝗲𝗽 𝟭: Click Login to connect.\n➜ 𝗦𝘁𝗲𝗽 𝟮: Forward your channel msg to set destination.\n➜ 𝗦𝘁𝗲𝗽 𝟯: Send restricted links to save!\n\n━━━━━━━━━━━━━━━━━━━━\n\n👇 𝗚𝗘𝗧 𝗦𝗧𝗔𝗥𝗧𝗘𝗗 𝗡𝗢𝗪 👇\n\n╰━━━ ⚙️ 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗣𝗥𝗢 Jaat ⚙️ ━━━╯"""
 
 def get_home_buttons():
     return [
-        [InlineKeyboardButton("🔑 𝗟𝗼𝗴𝗶𝗻", callback_data="login_instruction"), InlineKeyboardButton("📊 𝗦𝘁𝗮𝘁𝘀 (Admin)", callback_data="show_stats")],
+        [InlineKeyboardButton("🔑 𝗟𝗼𝗴𝗶𝗻", callback_data="start_login"), InlineKeyboardButton("📊 𝗦𝘁𝗮𝘁𝘀 (Admin)", callback_data="show_stats")],
         [InlineKeyboardButton("❣️ Dᴇᴠᴇʟᴏᴘᴇʀ", url="https://t.me/kingvj01"), InlineKeyboardButton("🤖 Uᴘᴅᴀᴛᴇs", url="https://t.me/vj_bots")],
         [InlineKeyboardButton("❓ ʜᴏᴡ ᴛᴏ ᴜsᴇ (ʜᴇʟᴘ)", callback_data="show_help")]
     ]
@@ -178,16 +178,30 @@ async def send_start(client: Client, message: Message):
     if not await db.is_user_exist(message.from_user.id):
         await db.add_user(message.from_user.id, message.from_user.first_name)
     
+    # 🔥 DYNAMIC BOT MENU GENERATOR
     try:
-        cmds = [BotCommand("start", "🚀 Start"), BotCommand("login", "🔑 Login"), BotCommand("help", "❓ Help"), BotCommand("clear", "🗑 Clear Channels")]
+        cmds = [
+            BotCommand("start", "🚀 Start Bot"), 
+            BotCommand("login", "🔑 Login Account"), 
+            BotCommand("logout", "🚪 Logout Account"),
+            BotCommand("help", "❓ Help Menu"), 
+            BotCommand("clear", "🗑 Clear Channels"),
+            BotCommand("cancel", "🛑 Cancel Task")
+        ]
         if message.from_user.id in ADMIN_IDS:
-            cmds.extend([BotCommand("stats", "📊 Stats"), BotCommand("fsublist", "📋 FSub List")])
+            cmds.extend([
+                BotCommand("stats", "📊 Server Stats"), 
+                BotCommand("addfsub", "➕ Add Force Sub"),
+                BotCommand("fsublist", "📋 FSub List"),
+                BotCommand("delfsub", "🗑 Delete FSub")
+            ])
         await client.set_bot_commands(cmds)
     except: pass 
 
-    await client.send_message(
+    await client.send_photo(
         chat_id=message.chat.id, 
-        text=get_welcome_text(message.from_user.first_name or "User"), 
+        photo="Image.jpg", 
+        caption=get_welcome_text(message.from_user.first_name or "User"), 
         reply_markup=InlineKeyboardMarkup(get_home_buttons()), 
         reply_to_message_id=message.id
     )
@@ -211,15 +225,27 @@ async def send_stats(client: Client, message: Message):
     await client.send_message(message.chat.id, stats_msg)
 
 # ==========================================
-# CALLBACK HANDLERS
+# CALLBACK HANDLERS (BUTTON CLICKS)
 # ==========================================
 @Client.on_callback_query(filters.regex("show_help"))
 async def help_callback(client: Client, query):
-    await query.message.edit_text(text=HELP_TEXT, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Bᴀᴄᴋ", callback_data="back_start")]]))
+    await query.message.edit_caption(caption=HELP_TEXT, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Bᴀᴄᴋ", callback_data="back_start")]]))
 
-@Client.on_callback_query(filters.regex("login_instruction"))
+# 🔥 DIRECT LOGIN TRIGGER BY BUTTON
+@Client.on_callback_query(filters.regex("start_login"))
 async def login_callback(client: Client, query):
-    await query.answer("Type and send /login in the chat to start the login process!", show_alert=True)
+    await query.answer("Starting Login Process...", show_alert=False)
+    # generate.py ke function ko bula kar direct trigger karna
+    from TechVJ.generate import main as login_process
+    
+    # Message object copy banakar usme text daalna
+    mock_message = query.message
+    mock_message.from_user = query.from_user
+    mock_message.text = "/login"
+    
+    # Puraana welcome message delete karna aur login chalana
+    await query.message.delete()
+    await login_process(client, mock_message)
 
 @Client.on_callback_query(filters.regex("show_stats"))
 async def stats_callback(client: Client, query):
@@ -230,11 +256,11 @@ async def stats_callback(client: Client, query):
     dl = get_size(ServerStats.downloaded_bytes)
     ul = get_size(ServerStats.uploaded_bytes)
     stats_msg = f"""╭━━━ 📊 𝗕𝗢𝗧 𝗦𝗧𝗔𝗧𝗜𝗦𝗧𝗜𝗖𝗦 📊 ━━━╮\n\n👥 𝗧𝗼𝘁𝗮𝗹 𝗨𝘀𝗲𝗿𝘀 (𝗠𝗼𝗻𝗴𝗼𝗗𝗕): {total_users}\n🔑 𝗔𝗰𝘁𝗶𝘃𝗲 𝗟𝗼𝗴𝗶𝗻𝘀: Secured in DB\n\n⬇️ 𝗦𝗲𝗿𝘃𝗲𝗿 𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗲𝗱: {dl}\n⬆️ 𝗦𝗲𝗿𝘃𝗲𝗿 𝗨𝗽𝗹𝗼𝗮𝗱𝗲𝗱: {ul}\n🔄 𝗧𝗼𝘁𝗮𝗹 𝗗𝗮𝘁𝗮 𝗨𝘀𝗲𝗱: {get_size(ServerStats.downloaded_bytes + ServerStats.uploaded_bytes)}\n\n╰━━━ ⚙️ 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗣𝗥𝗢 Jaat ⚙️ ━━━╯"""
-    await query.message.edit_text(text=stats_msg, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Bᴀᴄᴋ", callback_data="back_start")]]))
+    await query.message.edit_caption(caption=stats_msg, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Bᴀᴄᴋ", callback_data="back_start")]]))
 
 @Client.on_callback_query(filters.regex("back_start"))
 async def back_callback(client: Client, query):
-    await query.message.edit_text(text=get_welcome_text(query.from_user.first_name or "User"), reply_markup=InlineKeyboardMarkup(get_home_buttons()))
+    await query.message.edit_caption(caption=get_welcome_text(query.from_user.first_name or "User"), reply_markup=InlineKeyboardMarkup(get_home_buttons()))
 
 @Client.on_message(filters.command(["cancel"]))
 async def send_cancel(client: Client, message: Message):
