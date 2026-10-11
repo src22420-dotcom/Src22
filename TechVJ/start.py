@@ -5,6 +5,7 @@
 import os
 import asyncio 
 import time
+import re
 import pyrogram
 from pyrogram import Client, filters, enums
 from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, UserAlreadyParticipant, InviteHashExpired, UsernameNotOccupied, UserNotParticipant
@@ -17,7 +18,7 @@ from bot import TechVJUser
 # ==========================================
 # 👑 ADMIN SYSTEM (Yahan Apni ID Daalein)
 # ==========================================
-ADMIN_IDS = [5450796741, 9876543210] # <--- YAHAN APNI NUMBER WALI ID DAALEIN
+ADMIN_IDS = [1234567890, 9876543210] # <--- YAHAN APNI NUMBER WALI ID DAALEIN
 
 # ==========================================
 # TEMPORARY MEMORY & STATES
@@ -28,26 +29,24 @@ class batch_temp(object):
     USER_DOWNLOAD_COUNT = {} 
     FORCE_SUB_CHANNELS = [] 
     
-    # NEW: Advanced State Management for Edit Menu
+    # Advanced State Management
     USER_STATE = {} 
     BATCH_DATA = {} 
-    FAILED_LINKS = {}
 
 class ServerStats:
     downloaded_bytes = 0
     uploaded_bytes = 0
 
-# --- Live Progress Bar (Anti-Spam) ---
+# --- Live Progress Bar ---
 async def progress(current, total, client, message, start_time, base_text):
     now = time.time()
-    if (now - start_time[0]) > 2.5: # Update har 2.5 second mein (FloodWait se bachne ke liye)
+    if (now - start_time[0]) > 2.5: 
         start_time[0] = now
         percent = current * 100 / total
         status = f"{base_text}\n\n🚀 𝗟𝗶𝘃𝗲 𝗣𝗿𝗼𝗴𝗿𝗲𝘀𝘀: {percent:.1f}%\n💾 𝗦𝗶𝘇𝗲: {get_size(current)} / {get_size(total)}"
         try:
             await client.edit_message_text(message.chat.id, message.id, status)
-        except Exception:
-            pass
+        except: pass
 
 def get_size(bytes_size):
     for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
@@ -92,20 +91,20 @@ async def check_fsub(client, user_id):
 # PRO UI & TEXT VARIABLES
 # ==========================================
 DEMO_OVER_TEXT = "<b>🚫 Arey Bhai! Demo Limit Over! 😂</b>\n\n<i>(Limit: Max 5 Files ya 50MB Size).</i>\n\n💎 <b>Apna PRO Bot Banwayein!</b>\nBina kisi limit ke apna khud ka powerful bot banwane ke liye Admin se contact karein 👇"
-BUY_PRO_BUTTON = InlineKeyboardMarkup([[InlineKeyboardButton("👑 Buy PRO Code / Contact Admin", url="https://t.me/rajk98765a")]])
+BUY_PRO_BUTTON = InlineKeyboardMarkup([[InlineKeyboardButton("👑 Buy PRO Code / Contact Admin", url="https://t.me/kingvj01")]])
 HELP_TEXT = "╭━━━ 🛠 𝗛𝗢𝗪 𝗧𝗢 𝗨𝗦𝗘 𝗕𝗢𝗧 🛠 ━━━╮\n\n💡 𝗦𝗧𝗘𝗣𝗦:\n𝟭. `/login` se apna account connect karein.\n𝟮. Apne target channel ka msg forward karein taaki Auto-Upload set ho.\n𝟯. Restricted link bhejein.\n𝟰. <b>Edit Menu</b> khulega jahan aap Caption, Subject aur Replace set kar sakte hain.\n𝟱. 'Start Batch' dabayein aur magic dekhein!\n\n╰━━━ ⚙️ 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗣𝗥𝗢 Jaat ⚙️ ━━━╯"
 
 def get_welcome_text(first_name):
-    return f"╭━━━ ⚡ 𝗥𝗘𝗦 𝗖𝗢𝗡𝗧𝗘𝗡𝗧 𝗦𝗔𝗩𝗘𝗥 ⚡ ━━━╮\n\n👋 𝗪𝗘𝗟𝗖𝗢𝗠𝗘, {first_name}!\n\n🤖 𝗬𝗢𝗨𝗥 𝗔𝗟𝗟-𝗜𝗡-𝗢𝗡𝗘 𝗖𝗢𝗡𝗧𝗘𝗡𝗧 𝗧𝗢𝗢𝗟 🚀\n\n┏━━━━━━━━━━━━━━━━━━━━┓\n┃ 💎 𝗣𝗥𝗢 𝗕𝗢𝗧 𝗙𝗘𝗔𝗧𝗨𝗥𝗘𝗦\n┣━━━━━━━━━━━━━━━━━━━━┫\n┃ 🔑 Secure Login\n┃ 📡 Multiple Auto-Channels\n┃ ✏️ Advanced Edit Menu\n┃ 📦 Subject/Folder System\n┃ 🔄 Retry Failed Links\n┗━━━━━━━━━━━━━━━━━━━━┛\n\n👇 𝗚𝗘𝗧 𝗦𝗧𝗔𝗥𝗧𝗘𝗗 𝗡𝗢𝗪 👇\n╰━━━ ⚙️ 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗣𝗥𝗢 Jaat ⚙️ ━━━╯"
+    return f"╭━━━ ⚡ 𝗥𝗘𝗦 𝗖𝗢𝗡𝗧𝗘𝗡𝗧 𝗦𝗔𝗩𝗘𝗥 ⚡ ━━━╮\n\n👋 𝗪𝗘𝗟𝗖𝗢𝗠𝗘, {first_name}!\n\n🤖 𝗬𝗢𝗨𝗥 𝗔𝗟𝗟-𝗜𝗡-𝗢𝗡𝗘 𝗖𝗢𝗡𝗧𝗘𝗡𝗧 𝗧𝗢𝗢𝗟 🚀\n\n┏━━━━━━━━━━━━━━━━━━━━┓\n┃ 💎 𝗣𝗥𝗢 𝗕𝗢𝗧 𝗙𝗘𝗔𝗧𝗨𝗥𝗘𝗦\n┣━━━━━━━━━━━━━━━━━━━━┫\n┃ 🔑 Secure Login\n┃ 📡 Multiple Auto-Channels\n┃ ✏️ Auto-Detect Caption Engine\n┃ 🔗 Smart Link Replacer\n┃ 🔄 Retry Failed Links\n┗━━━━━━━━━━━━━━━━━━━━┛\n\n👇 𝗚𝗘𝗧 𝗦𝗧𝗔𝗥𝗧𝗘𝗗 𝗡𝗢𝗪 👇\n╰━━━ ⚙️ 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗣𝗥𝗢 Jaat ⚙️ ━━━╯"
 
 def get_home_buttons():
     return [
         [InlineKeyboardButton("🔑 𝗟𝗼𝗴𝗶𝗻", callback_data="start_login"), InlineKeyboardButton("📊 𝗦𝘁𝗮𝘁𝘀 (Admin)", callback_data="show_stats")],
-        [InlineKeyboardButton("❣️ Dᴇᴠᴇʟᴏᴘᴇʀ", url="https://t.me/rajk98765a"), InlineKeyboardButton("❓ 𝗛𝗲𝗹𝗽", callback_data="show_help")]
+        [InlineKeyboardButton("❣️ Dᴇᴠᴇʟᴏᴘᴇʀ", url="https://t.me/kingvj01"), InlineKeyboardButton("❓ 𝗛𝗲𝗹𝗽", callback_data="show_help")]
     ]
 
 # ==========================================
-# COMMANDS & F-SUB LOGIC
+# COMMANDS & ADMIN F-SUB LOGIC
 # ==========================================
 @Client.on_message(filters.command(["start"]))
 async def send_start(client: Client, message: Message):
@@ -123,7 +122,6 @@ async def send_start(client: Client, message: Message):
         await client.set_bot_commands(cmds)
     except: pass 
 
-    # Image ki jagah agar direct text chahiye to send_message use karo (Pic ke liye send_photo)
     await client.send_message(chat_id=message.chat.id, text=get_welcome_text(message.from_user.first_name or "User"), reply_markup=InlineKeyboardMarkup(get_home_buttons()), reply_to_message_id=message.id)
 
 @Client.on_message(filters.command(["addfsub", "fsublist", "delfsub", "stats", "help", "clear", "cancel"]) & filters.private)
@@ -138,7 +136,6 @@ async def admin_commands(client, message):
         batch_temp.USER_DESTINATIONS[user_id] = []
         return await message.reply("🗑️ **Auto-Upload Channels Cleared!**")
     
-    # Admin only
     if user_id not in ADMIN_IDS: return
     if cmd == "stats":
         total = await db.total_users_count()
@@ -167,20 +164,27 @@ async def add_target_channel(client: Client, message: Message):
             await message.reply_text(f"✅ **Auto-Upload Set:** {message.forward_from_chat.title}")
 
 # ==========================================
-# 🛑 EDIT MENU & STATE MANAGER
+# 🛑 PRO EDIT MENU & STATE MANAGER
 # ==========================================
 async def show_edit_menu(client, message, user_id):
     data = batch_temp.BATCH_DATA[user_id]
-    text = f"🛠 **𝗕𝗔𝗧𝗖𝗛 𝗖𝗢𝗡𝗙𝗜𝗚𝗨𝗥𝗔𝗧𝗜𝗢𝗡**\n\n"
-    text += f"📦 **Subject/Folder:** `{data['subject']}`\n"
-    text += f"🔄 **Replace Words:** `{len(data['replace'])} words`\n"
-    text += f"🗑 **Delete Words:** `{len(data['delete'])} words`\n"
-    text += f"📝 **Format:** `{data['format'][:15]}...`\n\n"
+    
+    # Text length limits for display
+    r_len = len(data['replace'])
+    d_len = len(data['delete'])
+    f_text = data['format'][:20] + "..." if len(data['format']) > 20 else data['format']
+    l_text = f"{data['link_replace']['name']}" if data['link_replace'] else "None"
+    
+    text = f"🛠 **𝗣𝗥𝗢 𝗕𝗔𝗧𝗖𝗛 𝗖𝗢𝗡𝗙𝗜𝗚𝗨𝗥𝗔𝗧𝗜𝗢𝗡**\n\n"
+    text += f"🔗 **Link Replace:** `{l_text}`\n"
+    text += f"🔄 **Replace Words:** `{r_len} pairs`\n"
+    text += f"🗑 **Delete Words:** `{d_len} words`\n"
+    text += f"📝 **Format / Auto-Subject:** `{f_text}`\n\n"
     text += "👇 *Select options below to edit or Start processing:*"
     
     buttons = [
-        [InlineKeyboardButton("📦 Set Subject", callback_data="edit_subject"), InlineKeyboardButton("🔄 Replace Text", callback_data="edit_replace")],
-        [InlineKeyboardButton("🗑 Delete Words", callback_data="edit_delete"), InlineKeyboardButton("📝 Custom Format", callback_data="edit_format")],
+        [InlineKeyboardButton("🔗 Edit Links", callback_data="edit_link"), InlineKeyboardButton("🔄 Replace Text", callback_data="edit_replace")],
+        [InlineKeyboardButton("🗑 Delete Words", callback_data="edit_delete"), InlineKeyboardButton("📝 Smart Format", callback_data="edit_format")],
         [InlineKeyboardButton("▶️ 𝗦𝗧𝗔𝗥𝗧 𝗕𝗔𝗧𝗖𝗛", callback_data="start_processing")]
     ]
     if 'menu_msg' in data:
@@ -195,19 +199,22 @@ async def handle_text_and_links(client: Client, message: Message):
     user_id = message.from_user.id
     if message.text.startswith("/"): return
 
-    # STATE MANAGER FOR EDITING
+    # --- STATE MANAGER FOR EDITING ---
     state = batch_temp.USER_STATE.get(user_id)
     if state:
         data = batch_temp.BATCH_DATA.get(user_id)
         if not data: return
         
-        if message.text == "cancel":
+        if message.text.lower() == "cancel":
             batch_temp.USER_STATE[user_id] = None
             await message.reply("❌ Edit cancelled.")
             return await show_edit_menu(client, message, user_id)
 
-        if state == "WAIT_SUBJECT":
-            data['subject'] = message.text
+        if state == "WAIT_LINK":
+            try:
+                name, url = message.text.split(":")
+                data['link_replace'] = {'name': name.strip(), 'url': url.strip()}
+            except: await message.reply("❌ Invalid format! Use `Custom Name : https://link.com`")
         elif state == "WAIT_REPLACE":
             try:
                 pairs = message.text.split(",")
@@ -222,10 +229,10 @@ async def handle_text_and_links(client: Client, message: Message):
             data['format'] = message.text
             
         batch_temp.USER_STATE[user_id] = None
-        await message.delete() # delete user's reply to keep chat clean
+        await message.delete() 
         return await show_edit_menu(client, message, user_id)
 
-    # LINK INTERCEPTOR
+    # --- LINK INTERCEPTOR ---
     if "https://t.me/" in message.text:
         fsub_check = await check_fsub(client, message.from_user.id)
         if fsub_check is not True and len(fsub_check) > 0:
@@ -234,7 +241,6 @@ async def handle_text_and_links(client: Client, message: Message):
         if batch_temp.IS_BATCH.get(user_id) == False:
             return await message.reply_text("**⏳ Ek task pehle se chal raha hai... wait karein ya /cancel karein.**")
         
-        # Parse Link Data
         datas = message.text.split("/")
         temp = datas[-1].replace("?single","").split("-")
         fromID = int(temp[0].strip())
@@ -245,14 +251,13 @@ async def handle_text_and_links(client: Client, message: Message):
         is_private = True if "t.me/c/" in message.text else False
         if is_private: chat_or_user = int("-100" + chat_or_user)
 
-        # Generate Link List
         links_list = list(range(fromID, toID + 1))
 
-        # Setup Default Batch Data
+        # Default PRO Batch Data
         batch_temp.BATCH_DATA[user_id] = {
             'target': chat_or_user,
             'links': links_list,
-            'subject': 'None',
+            'link_replace': None, 
             'replace': {},
             'delete': [],
             'format': '{caption}',
@@ -287,13 +292,31 @@ async def callback_handler(client: Client, query):
         action = data.split("_")[1]
         batch_temp.USER_STATE[user_id] = f"WAIT_{action.upper()}"
         
-        prompts = {
-            "subject": "📁 **Send Subject Name** (Ye har video ke upar lag jayega):\n\n*(Type 'cancel' to abort)*",
-            "replace": "🔄 **Send Words to Replace:**\nFormat: `OldWord:NewWord, BadWord:GoodWord`\n\n*(Type 'cancel' to abort)*",
-            "delete": "🗑 **Send Words to Delete:**\nFormat: `Word1, Word2, Link.com`\n\n*(Type 'cancel' to abort)*",
-            "format": "📝 **Send Custom Caption Format:**\nNote: Use `{caption}` where you want original text to appear.\nExample: `**{caption}**\n\nJoin @MyChannel`\n\n*(Type 'cancel' to abort)*"
-        }
-        await query.message.reply(prompts[action])
+        if action == "link":
+            await query.message.reply("🔗 **Send Custom Link Format:**\nSabhi purane links is naye naam aur link se badal jayenge.\n\nFormat: `Custom Name : https://yourlink.com`\n\n*(Type 'cancel' to abort)*")
+        elif action == "replace":
+            await query.message.reply("🔄 **Send Words to Replace:**\nFormat: `OldWord:NewWord, BadWord:GoodWord`\n\n*(Type 'cancel' to abort)*")
+        elif action == "delete":
+            await query.message.reply("🗑 **Send Words to Delete:**\nFormat: `Word1, Word2, Link.com`\n\n*(Type 'cancel' to abort)*")
+        elif action == "format":
+            await query.answer("Fetching original format...", show_alert=False)
+            try:
+                # Bot first link ka original caption nikalega user ki sahayta ke liye
+                b_data = batch_temp.BATCH_DATA[user_id]
+                user_data = await db.get_session(user_id)
+                api_id = int(await db.get_api_id(user_id))
+                api_hash = await db.get_api_hash(user_id)
+                acc = Client("temp", session_string=user_data, api_hash=api_hash, api_id=api_id)
+                await acc.connect()
+                msg = await acc.get_messages(b_data['target'], b_data['links'][0])
+                raw_cap = msg.caption if msg.caption else (msg.text if msg.text else "")
+                await acc.disconnect()
+                
+                prompt = f"📝 **Smart Format Engine**\n\nYe rahi pehle link ki original text:\n\n`{raw_cap}`\n\nइसे कॉपी करें और एडिट करके भेजें।\n\n**PRO TAGS (Auto-Detect):**\n`{{caption}}` = Pura Text\n`{{line1}}` = Pehli line (Auto-Subject ke liye)\n`{{line2}}` = Dusri line\n\n*(Type 'cancel' to abort)*"
+            except:
+                prompt = "📝 **Smart Format Engine**\n\nAap custom format set kar sakte hain:\n`{caption}` = Pura original text\n`{line1}` = Pehli line (Auto-Subject)\n`{line2}` = Dusri line\n\nExample:\n`📁 Subject: {line1}`\n`{caption}`\n\n*(Type 'cancel' to abort)*"
+            
+            await query.message.reply(prompt)
         await query.answer()
 
     elif data == "start_processing":
@@ -304,7 +327,7 @@ async def callback_handler(client: Client, query):
         failed_links = batch_temp.BATCH_DATA[user_id].get('failed_links', [])
         if not failed_links: return await query.answer("No failed links!", show_alert=True)
         await query.message.delete()
-        batch_temp.BATCH_DATA[user_id]['failed_links'] = [] # Reset
+        batch_temp.BATCH_DATA[user_id]['failed_links'] = [] # Reset for retry
         await process_batch(client, query.message, user_id, failed_links)
 
 # ==========================================
@@ -315,8 +338,7 @@ async def process_batch(client, message, user_id, links_list):
     target_chat = b_data['target']
     total = len(links_list)
     
-    # Master Dashboard Message
-    dash_text = f"📦 **𝗕𝗮𝘁𝗰𝗵:** `{b_data['subject']}`\n🔢 **𝗧𝗼𝘁𝗮𝗹 𝗟𝗶𝗻𝗸𝘀:** {total}\n✅ **𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗲𝗱:** 0\n⏳ **𝗥𝗲𝗺𝗮𝗶𝗻𝗶𝗻𝗴:** {total}\n❌ **𝗙𝗮𝗶𝗹𝗲𝗱:** 0\n\n🚀 𝗦𝘁𝗮𝘁𝘂𝘀: Starting..."
+    dash_text = f"📦 **𝗕𝗮𝘁𝗰𝗵 𝗦𝘁𝗮𝗿𝘁𝗲𝗱**\n🔢 **𝗧𝗼𝘁𝗮𝗹 𝗟𝗶𝗻𝗸𝘀:** {total}\n✅ **𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗲𝗱:** 0\n⏳ **𝗥𝗲𝗺𝗮𝗶𝗻𝗶𝗻𝗴:** {total}\n❌ **𝗙𝗮𝗶𝗹𝗲𝗱:** 0\n\n🚀 𝗦𝘁𝗮𝘁𝘂𝘀: Connecting..."
     dash_msg = await client.send_message(message.chat.id, dash_text)
 
     if LOGIN_SYSTEM:
@@ -337,8 +359,8 @@ async def process_batch(client, message, user_id, links_list):
         if batch_temp.IS_BATCH.get(user_id): break
         
         remaining = total - success - failed
-        base_status = f"📦 **𝗕𝗮𝘁𝗰𝗵:** `{b_data['subject']}`\n🔢 **𝗧𝗼𝘁𝗮𝗹 𝗟𝗶𝗻𝗸𝘀:** {total}\n✅ **𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗲𝗱:** {success}\n⏳ **𝗥𝗲𝗺𝗮𝗶𝗻𝗶𝗻𝗴:** {remaining}\n❌ **𝗙𝗮𝗶𝗹𝗲𝗱:** {failed}"
-        await dash_msg.edit_text(f"{base_status}\n\n🚀 𝗦𝘁𝗮𝘁𝘂𝘀: Processing Message ID {msgid}...")
+        base_status = f"📦 **𝗕𝗮𝘁𝗰𝗵 𝗣𝗿𝗼𝗰𝗲𝘀𝘀𝗶𝗻𝗴**\n🔢 **𝗧𝗼𝘁𝗮𝗹 𝗟𝗶𝗻𝗸𝘀:** {total}\n✅ **𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗲𝗱:** {success}\n⏳ **𝗥𝗲𝗺𝗮𝗶𝗻𝗶𝗻𝗴:** {remaining}\n❌ **𝗙𝗮𝗶𝗹𝗲𝗱:** {failed}"
+        await dash_msg.edit_text(f"{base_status}\n\n🚀 𝗦𝘁𝗮𝘁𝘂𝘀: Extracting Message ID {msgid}...")
 
         try:
             res = await handle_file_transfer(client, acc, message, user_id, target_chat, msgid, b_data, dash_msg, base_status)
@@ -358,8 +380,7 @@ async def process_batch(client, message, user_id, links_list):
     
     batch_temp.IS_BATCH[user_id] = True
     
-    # Final Summary
-    final_text = f"🏁 **𝗕𝗔𝗧𝗖𝗛 𝗖𝗢𝗠𝗣𝗟𝗘𝗧𝗘𝗗** 🏁\n\n📦 **𝗦𝘂𝗯𝗷𝗲𝗰𝘁:** `{b_data['subject']}`\n✅ **𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹:** {success}\n❌ **𝗙𝗮𝗶𝗹𝗲𝗱:** {failed}"
+    final_text = f"🏁 **𝗕𝗔𝗧𝗖𝗛 𝗖𝗢𝗠𝗣𝗟𝗘𝗧𝗘𝗗** 🏁\n\n✅ **𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹:** {success}\n❌ **𝗙𝗮𝗶𝗹𝗲𝗱:** {failed}"
     buttons = []
     if failed > 0:
         buttons.append([InlineKeyboardButton("🔄 Retry Failed Links", callback_data="retry_failed")])
@@ -374,7 +395,6 @@ async def handle_file_transfer(client, acc, message, user_id, chatid, msgid, b_d
     
     is_admin = user_id in ADMIN_IDS
 
-    # DEMO LIMIT CHECK
     if not is_admin:
         if batch_temp.USER_DOWNLOAD_COUNT.get(user_id, 0) >= 5:
             await client.send_message(message.chat.id, DEMO_OVER_TEXT, reply_markup=BUY_PRO_BUTTON, parse_mode=enums.ParseMode.HTML)
@@ -383,47 +403,66 @@ async def handle_file_transfer(client, acc, message, user_id, chatid, msgid, b_d
             await client.send_message(message.chat.id, DEMO_OVER_TEXT, reply_markup=BUY_PRO_BUTTON, parse_mode=enums.ParseMode.HTML)
             return False
 
-    # DESTINATION
     dest_chats = batch_temp.USER_DESTINATIONS.get(user_id, [])
     if not dest_chats: dest_chats = [int(CHANNEL_ID)] if CHANNEL_ID else [message.chat.id]
     primary_chat = dest_chats[0]
 
-    # --- ✏️ CAPTION EDITOR ENGINE ---
-    raw_caption = msg.caption if msg.caption else msg.text
-    if raw_caption:
-        text_data = raw_caption
-        # 1. Replace
+    # ==========================================
+    # 🧠 PRO SMART CAPTION ENGINE 
+    # ==========================================
+    # HTML formatting use kar rahe hain taaki bold/italic links barkaraar rahein
+    raw_caption = msg.caption.html if msg.caption else (msg.text.html if msg.text else "")
+    if not raw_caption and msg.caption: raw_caption = msg.caption # fallback
+    
+    if raw_caption or b_data['format'] != "{caption}":
+        text_data = b_data['format']
+        
+        # --- 1. Auto-Detect Tags (Line1, Line2, etc) ---
+        clean_lines = (msg.caption if msg.caption else (msg.text if msg.text else "")).split('\n')
+        line1 = clean_lines[0].strip() if len(clean_lines) > 0 else ""
+        line2 = clean_lines[1].strip() if len(clean_lines) > 1 else ""
+        
+        text_data = text_data.replace("{caption}", raw_caption)
+        text_data = text_data.replace("{line1}", line1)
+        text_data = text_data.replace("{line2}", line2)
+        
+        # --- 2. Replace Text ---
         for old, new in b_data['replace'].items(): text_data = text_data.replace(old, new)
-        # 2. Delete
+        
+        # --- 3. Delete Text ---
         for word in b_data['delete']: text_data = text_data.replace(word, "")
-        # 3. Format
-        text_data = b_data['format'].replace("{caption}", text_data)
-        # 4. Subject/Folder Header
-        if b_data['subject'] != 'None':
-            text_data = f"📁 **{b_data['subject']}**\n\n" + text_data
             
+        # --- 4. Smart Link Replacer ---
+        if b_data['link_replace']:
+            name = b_data['link_replace']['name']
+            url = b_data['link_replace']['url']
+            custom_hyperlink = f"<a href='{url}'>{name}</a>"
+            
+            # HTML tags wale links ko badalna
+            text_data = re.sub(r'<a href="[^"]+">[^<]+</a>', custom_hyperlink, text_data)
+            # Normal text links (http/https) ko badalna
+            text_data = re.sub(r'(?<!["\'])(https?://\S+)', custom_hyperlink, text_data)
+        
         if msg.caption: caption = text_data
         else: msg.text = text_data
     else: 
-        caption = f"📁 **{b_data['subject']}**" if b_data['subject'] != 'None' else None
+        caption = None
 
-    # Text Messages
     if "Text" == msg_type:
         try:
-            sent = await client.send_message(primary_chat, msg.text, entities=msg.entities)
+            sent = await client.send_message(primary_chat, msg.text, parse_mode=enums.ParseMode.HTML)
             for c in dest_chats[1:]: await sent.copy(c)
             return True
         except: return False
 
-    # DOWNLOAD
+    # --- DOWNLOADING ---
     start_time = [time.time()]
     try:
         file = await acc.download_media(msg, progress=progress, progress_args=[client, dash_msg, start_time, base_status + "\n\n📥 **Status:** Downloading..."])
         if file and os.path.exists(file): ServerStats.downloaded_bytes += os.path.getsize(file)
-    except:
-        return False
+    except: return False
 
-    # UPLOAD
+    # --- UPLOADING ---
     sent_msg = None
     start_time = [time.time()]
     up_status = base_status + "\n\n📤 **Status:** Uploading..."
@@ -431,33 +470,31 @@ async def handle_file_transfer(client, acc, message, user_id, chatid, msgid, b_d
     try:
         if "Document" == msg_type:
             ph = await acc.download_media(msg.document.thumbs[0].file_id) if getattr(msg.document, 'thumbs', None) else None
-            sent_msg = await client.send_document(primary_chat, file, thumb=ph, caption=caption, progress=progress, progress_args=[client, dash_msg, start_time, up_status])
+            sent_msg = await client.send_document(primary_chat, file, thumb=ph, caption=caption, parse_mode=enums.ParseMode.HTML, progress=progress, progress_args=[client, dash_msg, start_time, up_status])
             if ph: os.remove(ph)
         elif "Video" == msg_type:
             ph = await acc.download_media(msg.video.thumbs[0].file_id) if getattr(msg.video, 'thumbs', None) else None
-            sent_msg = await client.send_video(primary_chat, file, duration=msg.video.duration, width=msg.video.width, height=msg.video.height, thumb=ph, caption=caption, progress=progress, progress_args=[client, dash_msg, start_time, up_status])
+            sent_msg = await client.send_video(primary_chat, file, duration=msg.video.duration, width=msg.video.width, height=msg.video.height, thumb=ph, caption=caption, parse_mode=enums.ParseMode.HTML, progress=progress, progress_args=[client, dash_msg, start_time, up_status])
             if ph: os.remove(ph)
         elif "Audio" == msg_type:
             ph = await acc.download_media(msg.audio.thumbs[0].file_id) if getattr(msg.audio, 'thumbs', None) else None
-            sent_msg = await client.send_audio(primary_chat, file, thumb=ph, caption=caption, progress=progress, progress_args=[client, dash_msg, start_time, up_status])   
+            sent_msg = await client.send_audio(primary_chat, file, thumb=ph, caption=caption, parse_mode=enums.ParseMode.HTML, progress=progress, progress_args=[client, dash_msg, start_time, up_status])   
             if ph: os.remove(ph)
         elif "Photo" == msg_type:
-            sent_msg = await client.send_photo(primary_chat, file, caption=caption)
-        else: # Animation, Sticker, Voice
+            sent_msg = await client.send_photo(primary_chat, file, caption=caption, parse_mode=enums.ParseMode.HTML)
+        else:
             func = getattr(client, f"send_{msg_type.lower()}")
-            sent_msg = await func(primary_chat, file, caption=caption) if msg_type not in ["Sticker"] else await func(primary_chat, file)
+            sent_msg = await func(primary_chat, file, caption=caption, parse_mode=enums.ParseMode.HTML) if msg_type not in ["Sticker"] else await func(primary_chat, file)
     except:
         pass
 
     if sent_msg and os.path.exists(file): ServerStats.uploaded_bytes += os.path.getsize(file)
 
-    # MULTIPLE CHANNELS FORWARD
     if sent_msg and len(dest_chats) > 1:
         for chat in dest_chats[1:]:
             try: await sent_msg.copy(chat); await asyncio.sleep(0.5)
             except: pass
 
-    # CLEANUP & RECORD
     if os.path.exists(file): os.remove(file)
     
     if sent_msg:
