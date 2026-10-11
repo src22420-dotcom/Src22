@@ -16,7 +16,7 @@ from bot import TechVJUser
 # ==========================================
 # 👑 ADMIN SYSTEM (Yahan Apni ID Daalein)
 # ==========================================
-ADMIN_IDS = [1234567890, 9876543210] # <--- YAHAN APNI NUMBER WALI ID DAALEIN
+ADMIN_IDS = [5450796741, 9876543210] # <--- YAHAN APNI NUMBER WALI ID DAALEIN
 
 # ==========================================
 # TEMPORARY MEMORY DATA
@@ -112,7 +112,7 @@ BUY_PRO_BUTTON = InlineKeyboardMarkup([[InlineKeyboardButton("👑 Buy PRO Code 
 HELP_TEXT = """╭━━━ 🛠 𝗛𝗢𝗪 𝗧𝗢 𝗨𝗦𝗘 𝗕𝗢𝗧 🛠 ━━━╮\n\n💡 𝗦𝗧𝗘𝗣-𝗕𝗬-𝗦𝗧𝗘𝗣 𝗚𝗨𝗜𝗗𝗘:\n\n𝟭. 🔐 𝗟𝗼𝗴𝗶𝗻 (𝗠𝗮𝗻𝗱𝗮𝘁𝗼𝗿𝘆)\n➜ Send `/login` to connect your account. \n\n𝟮. 📡 𝗦𝗲𝘁𝘂𝗽 𝗔𝘂𝘁𝗼-𝗨𝗽𝗹𝗼𝗮𝗱 𝗖𝗵𝗮𝗻𝗻𝗲𝗹𝘀\n➜ Forward ANY message from your target channel to this bot.\n\n𝟯. 📥 𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱 𝗖𝗼𝗻𝘁𝗲𝗻𝘁\n➜ Send the post link from the restricted channel.\n\n𝟰. ✏️ 𝗖𝗮𝗽𝘁𝗶𝗼𝗻 𝗘𝗱𝗶𝘁𝗼𝗿 (𝗔𝘂𝘁𝗼)\n➜ Bot automatically removes unwanted links and replaces old names.\n\n𝟱. 🗑 𝗠𝗮𝗻𝗮𝗴𝗲𝗺𝗲𝗻𝘁\n➜ `/clear` - Reset destination channels list.\n➜ `/cancel` - Stop a running batch process.\n\n╰━━━ ⚙️ 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗣𝗥𝗢 Jaat ⚙️ ━━━╯"""
 
 def get_welcome_text(first_name):
-    return f"""╭━━━ ⚡ 𝗥𝗘𝗦 𝗖𝗢𝗡𝗧𝗘𝗡𝗧 𝗦𝗔𝗩𝗘𝗥 ⚡ ━━━╮\n\n👋 𝗪𝗘𝗟𝗖𝗢𝗠𝗘, {first_name}!\n\n🤖 𝗬𝗢𝗨𝗥 𝗔𝗟𝗟-𝗜𝗡-𝗢𝗡𝗘 𝗖𝗢𝗡𝗧𝗘𝗡𝗧 𝗧𝗢𝗢𝗟 🚀\n\n┏━━━━━━━━━━━━━━━━━━━━┓\n┃ 💎 𝗣𝗥𝗢 𝗕𝗢𝗧 𝗙𝗘𝗔𝗧𝗨𝗥𝗘𝗦\n┣━━━━━━━━━━━━━━━━━━━━┫\n┃ 🔑 Secure Account Login\n┃ 📡 Multiple Channels Add\n┃ ✏️ Auto Caption Editor\n┃ 📥 Res. Content Save\n┃ 🔄 Fast Forward & Bypass\n┃ 📊 Server Stats Tracker\n┗━━━━━━━━━━━━━━━━━━━━┛\n\n🎯 𝗦𝗜𝗠𝗣𝗟𝗘 𝗪𝗢𝗥𝗞𝗙𝗟𝗢𝗪\n➜ 𝗦𝘁𝗲𝗽 𝟭: Click Login to connect.\n➜ 𝗦𝘁𝗲𝗽 𝟮: Forward your channel msg to set destination.\n➜ 𝗦𝘁𝗲𝗽 𝟯: Send restricted links to save!\n\n━━━━━━━━━━━━━━━━━━━━\n\n👇 𝗚𝗘𝗧 𝗦𝗧𝗔𝗥𝗧𝗘𝗗 𝗡𝗢𝗪 👇\n\n╰━━━ ⚙️ 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗣𝗥𝗢 Jaat ⚙️ ━━━╯"""
+    return f"""╭━━━ ⚡ 𝗥𝗘𝗦 𝗖𝗢𝗡𝗧𝗘𝗡𝗧 𝗦𝗔𝗩𝗘𝗥 ⚡ ━━━╮\n\n👋 𝗪𝗘𝗟𝗖𝗢𝗠𝗘, {first_name}!\n\n🎯 𝗦𝗜𝗠𝗣𝗟𝗘 𝗪𝗢𝗥𝗞𝗙𝗟𝗢𝗪\n➜ 𝗦𝘁𝗲𝗽 𝟭: Click Login to connect.\n➜ 𝗦𝘁𝗲𝗽 𝟮: Forward your channel msg to set destination.\n➜ 𝗦𝘁𝗲𝗽 𝟯: Send restricted links to save!\n\n━━━━━━━━━━━━━━━━━━━━\n\n👇 𝗚𝗘𝗧 𝗦𝗧𝗔𝗥𝗧𝗘𝗗 𝗡𝗢𝗪 👇\n\n╰━━━ ⚙️ 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗣𝗥𝗢 Jaat ⚙️ ━━━╯"""
 
 def get_home_buttons():
     return [
