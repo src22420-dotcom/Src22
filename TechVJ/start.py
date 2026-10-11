@@ -17,7 +17,7 @@ from bot import TechVJUser
 # ==========================================
 # 👑 ADMIN SYSTEM (Yahan Apni ID Daalein)
 # ==========================================
-ADMIN_IDS = [1234567890, 9876543210] # <--- YAHAN APNI NUMBER WALI ID DAALEIN
+ADMIN_IDS = [5450796741, 9876543210] # <--- YAHAN APNI NUMBER WALI ID DAALEIN
 
 # ==========================================
 # TEMPORARY MEMORY & STATES
@@ -92,7 +92,7 @@ async def check_fsub(client, user_id):
 # PRO UI & TEXT VARIABLES
 # ==========================================
 DEMO_OVER_TEXT = "<b>🚫 Arey Bhai! Demo Limit Over! 😂</b>\n\n<i>(Limit: Max 5 Files ya 50MB Size).</i>\n\n💎 <b>Apna PRO Bot Banwayein!</b>\nBina kisi limit ke apna khud ka powerful bot banwane ke liye Admin se contact karein 👇"
-BUY_PRO_BUTTON = InlineKeyboardMarkup([[InlineKeyboardButton("👑 Buy PRO Code / Contact Admin", url="https://t.me/kingvj01")]])
+BUY_PRO_BUTTON = InlineKeyboardMarkup([[InlineKeyboardButton("👑 Buy PRO Code / Contact Admin", url="https://t.me/rajk98765a")]])
 HELP_TEXT = "╭━━━ 🛠 𝗛𝗢𝗪 𝗧𝗢 𝗨𝗦𝗘 𝗕𝗢𝗧 🛠 ━━━╮\n\n💡 𝗦𝗧𝗘𝗣𝗦:\n𝟭. `/login` se apna account connect karein.\n𝟮. Apne target channel ka msg forward karein taaki Auto-Upload set ho.\n𝟯. Restricted link bhejein.\n𝟰. <b>Edit Menu</b> khulega jahan aap Caption, Subject aur Replace set kar sakte hain.\n𝟱. 'Start Batch' dabayein aur magic dekhein!\n\n╰━━━ ⚙️ 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗣𝗥𝗢 Jaat ⚙️ ━━━╯"
 
 def get_welcome_text(first_name):
@@ -101,7 +101,7 @@ def get_welcome_text(first_name):
 def get_home_buttons():
     return [
         [InlineKeyboardButton("🔑 𝗟𝗼𝗴𝗶𝗻", callback_data="start_login"), InlineKeyboardButton("📊 𝗦𝘁𝗮𝘁𝘀 (Admin)", callback_data="show_stats")],
-        [InlineKeyboardButton("❣️ Dᴇᴠᴇʟᴏᴘᴇʀ", url="https://t.me/kingvj01"), InlineKeyboardButton("❓ 𝗛𝗲𝗹𝗽", callback_data="show_help")]
+        [InlineKeyboardButton("❣️ Dᴇᴠᴇʟᴏᴘᴇʀ", url="https://t.me/rajk98765a"), InlineKeyboardButton("❓ 𝗛𝗲𝗹𝗽", callback_data="show_help")]
     ]
 
 # ==========================================
