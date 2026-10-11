@@ -16,7 +16,7 @@ from TechVJ.strings import HELP_TXT
 from bot import TechVJUser
 
 # ==========================================
-# 👑 ADMIN SYSTEM
+# 👑 ADMIN SYSTEM (Yahan Apni ID Daalein)
 # ==========================================
 ADMIN_IDS = [1234567890, 9876543210] # <--- YAHAN APNI NUMBER WALI ID DAALEIN
 
@@ -84,37 +84,86 @@ async def check_fsub(client, user_id):
     return True
 
 # ==========================================
-# HELPER: FETCH SINGLE MESSAGE FOR INFO
+# 🧠 AUTO CAPTION EXTRACTOR (AI PARSER)
 # ==========================================
-async def fetch_single_message(user_id, link):
-    try:
-        datas = link.split("/")
-        msg_id = int(datas[-1].replace("?single","").split("-")[0])
-        chat_or_user = datas[4] if "t.me/c/" in link or "t.me/b/" in link else datas[3]
-        if "t.me/c/" in link: chat_or_user = int("-100" + str(chat_or_user))
-
-        user_data = await db.get_session(user_id)
-        if not user_data: return None
-        api_id = int(await db.get_api_id(user_id))
-        api_hash = await db.get_api_hash(user_id)
+def parse_pro_caption(raw_text):
+    if not raw_text or ("Title:" not in raw_text and "VIDEO ID:" not in raw_text and "FILE ID:" not in raw_text):
+        return raw_text # Agar original text naye wale setup jaisa nahi hai to waisa hi chhod do
         
-        acc = Client("temp_fetch", session_string=user_data, api_hash=api_hash, api_id=api_id)
-        await acc.connect()
-        msg = await acc.get_messages(chat_or_user, msg_id)
-        await acc.disconnect()
-        return msg
+    try:
+        # Extract ID
+        id_match = re.search(r'(?:VIDEO|FILE) ID:\s*(\d+)', raw_text, re.IGNORECASE)
+        vid_id = id_match.group(1) if id_match else "N/A"
+        
+        # Extract Raw Fields
+        title_match = re.search(r'📄 Title:\s*(.*)', raw_text)
+        raw_title = title_match.group(1).strip() if title_match else ""
+        
+        batch_match = re.search(r'🎓 Batch Name\s*:\s*(.*)', raw_text)
+        batch = batch_match.group(1).strip() if batch_match else "N/A"
+        
+        subject_match = re.search(r'📚 Subject Name\s*:\s*(.*)', raw_text)
+        raw_subject = subject_match.group(1).strip() if subject_match else "N/A"
+        
+        # Parse logic for Title/Topic
+        topic_match = re.search(r'^\((.*?)\)', raw_title)
+        topic = topic_match.group(1).strip() if topic_match else "N/A"
+        topic = topic.strip("- ")
+        
+        # Extract Teacher
+        teacher = "N/A"
+        teacher_match = re.search(r'By\s+(.*?)\s+(?:[A-Za-z\u0900-\u097F]+|\[)', raw_title)
+        if teacher_match:
+            teacher = teacher_match.group(1).strip()
+        else:
+            t_match = re.search(r'\((.*?सर.*?\vert{}.*?Mam.*?\vert{}.*?Sir.*?)\)', raw_subject)
+            if t_match: teacher = t_match.group(1).strip()
+            
+        # Clean Subject
+        subject = re.sub(r'\(.*?\)', '', raw_subject).strip()
+        
+        # Extract Quality & Extension
+        q_match = re.search(r'(\d+x\d+)', raw_title)
+        quality = f"{q_match.group(1)} HD" if q_match else "N/A"
+        ext = raw_title.split('.')[-1].upper() if '.' in raw_title else "N/A"
+        
+        # Build PRO Format Output
+        is_pdf = ext in ['PDF', 'DOC', 'DOCX', 'ZIP', 'PPT', 'TXT']
+        
+        if is_pdf:
+            cap = "╭━━━ 📁 FILE DETAILS ━━━╮\n"
+            cap += f"🆔 File ID: {vid_id}\n"
+            cap += f"📄 Title: {topic}\n"
+            cap += f"📚 Batch Name: {batch}\n"
+            cap += f"📖 Subject: {subject}\n"
+            if teacher != "N/A": cap += f"👨‍🏫 Teacher: {teacher}\n"
+            cap += f"📁 Format: {ext}\n"
+            cap += f"📥 Downloaded By: 𝕮𝖍𝖆𝖚𝖉𝖍𝖆𝖗𝖄\n"
+            cap += f"╰━━━━━━━━━━━━━━━━━━╯"
+        else:
+            cap = "╭━━━ 🎬 VIDEO DETAILS ━━━╮\n"
+            cap += f"🆔 Video ID: {vid_id}\n"
+            cap += f"🎥 Title: {topic}\n"
+            cap += f"📚 Batch Name: {batch}\n"
+            cap += f"📖 Subject: {subject}\n"
+            if teacher != "N/A": cap += f"👩‍🏫 Teacher: {teacher}\n"
+            if quality != "N/A": cap += f"🎞️ Quality: {quality}\n"
+            cap += f"📁 Format: {ext}\n"
+            cap += f"📥 Downloaded By: 𝕮𝖍𝖆𝖚𝖉𝖍𝖆𝖗𝖄\n"
+            cap += f"╰━━━━━━━━━━━━━━━━━━╯"
+        return cap
     except Exception as e:
-        return None
+        return raw_text # Any failure will safely return original text
 
 # ==========================================
 # PRO UI & TEXT VARIABLES
 # ==========================================
 DEMO_OVER_TEXT = "<b>🚫 Arey Bhai! Demo Limit Over! 😂</b>\n\n<i>(Limit: Max 5 Files ya 50MB Size).</i>\n\n💎 <b>Apna PRO Bot Banwayein!</b>\nBina kisi limit ke apna khud ka powerful bot banwane ke liye Admin se contact karein 👇"
 BUY_PRO_BUTTON = InlineKeyboardMarkup([[InlineKeyboardButton("👑 Buy PRO Code / Contact Admin", url="https://t.me/kingvj01")]])
-HELP_TEXT = "╭━━━ 🛠 𝗛𝗢𝗪 𝗧𝗢 𝗨𝗦𝗘 𝗕𝗢𝗧 🛠 ━━━╮\n\n💡 𝗦𝗧𝗘𝗣𝗦:\n𝟭. `/login` se apna account connect karein.\n𝟮. Apne target channel ka msg forward karein taaki Auto-Upload set ho.\n𝟯. Restricted link bhejein.\n𝟰. <b>Edit Menu</b> khulega jahan aap Caption, Subject aur Replace set kar sakte hain.\n𝟱. 'Start Batch' dabayein aur magic dekhein!\n\n╰━━━ ⚙️ 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗣𝗥𝗢 Jaat ⚙️ ━━━╯"
+HELP_TEXT = "╭━━━ 🛠 𝗛𝗢𝗪 𝗧𝗢 𝗨𝗦𝗘 𝗕𝗢𝗧 🛠 ━━━╮\n\n💡 𝗦𝗧𝗘𝗣𝗦:\n𝟭. `/login` se apna account connect karein.\n𝟮. Apne target channel ka msg forward karein taaki Auto-Upload set ho.\n𝟯. Restricted link bhejein.\n𝟰. <b>Edit Menu</b> khulega jahan aap Replace, Delete aur Link set kar sakte hain.\n𝟱. 'Start Batch' dabayein!\n\n╰━━━ ⚙️ 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗣𝗥𝗢 Jaat ⚙️ ━━━╯"
 
 def get_welcome_text(first_name):
-    return f"╭━━━ ⚡ 𝗥𝗘𝗦 𝗖𝗢𝗡𝗧𝗘𝗡𝗧 𝗦𝗔𝗩𝗘𝗥 ⚡ ━━━╮\n\n👋 𝗪𝗘𝗟𝗖𝗢𝗠𝗘, {first_name}!\n\n🤖 𝗬𝗢𝗨𝗥 𝗔𝗟𝗟-𝗜𝗡-𝗢𝗡𝗘 𝗖𝗢𝗡𝗧𝗘𝗡𝗧 𝗧𝗢𝗢𝗟 🚀\n\n┏━━━━━━━━━━━━━━━━━━━━┓\n┃ 💎 𝗣𝗥𝗢 𝗕𝗢𝗧 𝗙𝗘𝗔𝗧𝗨𝗥𝗘𝗦\n┣━━━━━━━━━━━━━━━━━━━━┫\n┃ 🔑 Secure Login\n┃ 📡 Multiple Auto-Channels\n┃ ✏️ Auto-Detect Caption Engine\n┃ 🔗 Smart Link Replacer\n┃ 🧠 Format AI Analyzer\n┗━━━━━━━━━━━━━━━━━━━━┛\n\n👇 𝗚𝗘𝗧 𝗦𝗧𝗔𝗥𝗧𝗘𝗗 𝗡𝗢𝗪 👇\n╰━━━ ⚙️ 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗣𝗥𝗢 Jaat ⚙️ ━━━╯"
+    return f"╭━━━ ⚡ 𝗥𝗘𝗦 𝗖𝗢𝗡𝗧𝗘𝗡𝗧 𝗦𝗔𝗩𝗘𝗥 ⚡ ━━━╮\n\n👋 𝗪𝗘𝗟𝗖𝗢𝗠𝗘, {first_name}!\n\n🤖 𝗬𝗢𝗨𝗥 𝗔𝗟𝗟-𝗜𝗡-𝗢𝗡𝗘 𝗖𝗢𝗡𝗧𝗘𝗡𝗧 𝗧𝗢𝗢𝗟 🚀\n\n┏━━━━━━━━━━━━━━━━━━━━┓\n┃ 💎 𝗣𝗥𝗢 𝗕𝗢𝗧 𝗙𝗘𝗔𝗧𝗨𝗥𝗘𝗦\n┣━━━━━━━━━━━━━━━━━━━━┫\n┃ 🔑 Secure Login\n┃ 📡 Multiple Auto-Channels\n┃ 🧠 Auto Content Parser (AI)\n┃ 🔗 Smart Link Replacer\n┃ 🔄 Retry Failed Links\n┗━━━━━━━━━━━━━━━━━━━━┛\n\n👇 𝗚𝗘𝗧 𝗦𝗧𝗔𝗥𝗧𝗘𝗗 𝗡𝗢𝗪 👇\n╰━━━ ⚙️ 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗣𝗥𝗢 Jaat ⚙️ ━━━╯"
 
 def get_home_buttons():
     return [
@@ -135,7 +184,7 @@ async def send_start(client: Client, message: Message):
         await db.add_user(message.from_user.id, message.from_user.first_name)
     
     try:
-        cmds = [BotCommand("start", "🚀 Start Bot"), BotCommand("login", "🔑 Login"), BotCommand("logout", "🚪 Logout"), BotCommand("help", "❓ Help"), BotCommand("clear", "🗑 Clear Channels"), BotCommand("cancel", "🛑 Cancel Task")]
+        cmds = [BotCommand("start", "🚀 Start"), BotCommand("login", "🔑 Login"), BotCommand("logout", "🚪 Logout"), BotCommand("help", "❓ Help"), BotCommand("clear", "🗑 Clear Channels"), BotCommand("cancel", "🛑 Cancel Task")]
         if message.from_user.id in ADMIN_IDS:
             cmds.extend([BotCommand("stats", "📊 Stats"), BotCommand("addfsub", "➕ Add FSub"), BotCommand("fsublist", "📋 FSub List"), BotCommand("delfsub", "🗑 Del FSub")])
         await client.set_bot_commands(cmds)
@@ -190,20 +239,18 @@ async def show_edit_menu(client, message, user_id):
     
     r_len = len(data['replace'])
     d_len = len(data['delete'])
-    f_text = data['format'][:20] + "..." if len(data['format']) > 20 else data['format']
     l_text = f"{data['link_replace']['name']}" if data['link_replace'] else "None"
     
     text = f"🛠 **𝗣𝗥𝗢 𝗕𝗔𝗧𝗖𝗛 𝗖𝗢𝗡𝗙𝗜𝗚𝗨𝗥𝗔𝗧𝗜𝗢𝗡**\n\n"
     text += f"🔗 **Link Replace:** `{l_text}`\n"
     text += f"🔄 **Replace Words:** `{r_len} pairs`\n"
     text += f"🗑 **Delete Words:** `{d_len} words`\n"
-    text += f"📝 **Format System:** `{f_text}`\n\n"
+    text += f"🤖 **Auto Parser:** `Active ✅ (Automatically designs caption)`\n\n"
     text += "👇 *Select options below to edit or Start processing:*"
     
     buttons = [
         [InlineKeyboardButton("🔗 Edit Links", callback_data="edit_link"), InlineKeyboardButton("🔄 Replace Text", callback_data="edit_replace")],
-        [InlineKeyboardButton("🗑 Delete Words", callback_data="edit_delete"), InlineKeyboardButton("📝 Smart Format", callback_data="edit_format")],
-        [InlineKeyboardButton("ℹ️ Format Info (AI Analyzer)", callback_data="format_info")],
+        [InlineKeyboardButton("🗑 Delete Words", callback_data="edit_delete")],
         [InlineKeyboardButton("▶️ 𝗦𝗧𝗔𝗥𝗧 𝗕𝗔𝗧𝗖𝗛", callback_data="start_processing")]
     ]
     if 'menu_msg' in data:
@@ -229,74 +276,36 @@ async def handle_text_and_links(client: Client, message: Message):
             await message.reply("❌ Edit cancelled.")
             return await show_edit_menu(client, message, user_id)
 
-        # 🧠 SMART FORMAT ENGINE (STEP 1: Fetch original, STEP 2: Wait for New Format)
-        if state == "WAIT_FORMAT_LINK":
-            msg_obj = await fetch_single_message(user_id, message.text)
-            if not msg_obj: return await message.reply("❌ **Link Fetch Failed!** Please check your login or link.\nSend another link or type 'cancel'.")
-            
-            raw_cap = msg_obj.caption if msg_obj.caption else (msg_obj.text if msg_obj.text else "")
-            prompt = f"📝 **ORIGINAL TEXT EXTRACTED:**\n\n`{raw_cap}`\n\n👇 **AB APNA NAYA FORMAT BHEJEIN:**\n\n**PRO TAGS:**\n`{{caption}}` = Pura Original Text\n`{{line1}}` = Pehli line (Auto-Subject/Title)\n`{{line2}}` = Dusri line\n\n*(Type 'cancel' to abort)*"
-            
-            batch_temp.USER_STATE[user_id] = "WAIT_FORMAT_TEXT"
-            return await message.reply(prompt)
-            
-        elif state == "WAIT_FORMAT_TEXT":
-            data['format'] = message.text
-            batch_temp.USER_STATE[user_id] = None
-            await message.delete() 
-            return await show_edit_menu(client, message, user_id)
+        # LINK 2-STEP SETUP
+        if state == "WAIT_LINK_NAME":
+            data['temp_link_name'] = message.text.strip()
+            batch_temp.USER_STATE[user_id] = "WAIT_LINK_URL"
+            await message.reply(f"🔗 Name saved: **{data['temp_link_name']}**\n\nAb us link ki **Target URL** bhejein (Jaise: `https://t.me/projaat`)\n\n*(Type 'cancel' to abort)*")
+            return
 
-        # 🧠 FORMAT INFO AI ANALYZER
-        elif state == "WAIT_INFO_LINK":
-            msg_obj = await fetch_single_message(user_id, message.text)
-            if not msg_obj: return await message.reply("❌ **Link Fetch Failed!** Type 'cancel'.")
+        elif state == "WAIT_LINK_URL":
+            if not message.text.startswith("http"):
+                return await message.reply("❌ Invalid URL! Hamesha 'http' se start hone wali link bhejein.\nTry Again ya 'cancel' bhejein.")
             
-            raw_cap = msg_obj.caption if msg_obj.caption else (msg_obj.text if msg_obj.text else "")
-            if not raw_cap: 
-                batch_temp.USER_STATE[user_id] = None
-                await message.reply("❌ Is message mein koi text/caption nahi hai.")
-                return await show_edit_menu(client, message, user_id)
-                
-            lines = raw_cap.split('\n')
-            analysis = "🧠 **FORMAT AI ANALYZER (Cheer-Faad):**\n\n"
+            name = data.pop('temp_link_name')
+            url = message.text.strip()
+            data['link_replace'] = {'name': name, 'url': url}
             
-            for i, line in enumerate(lines):
-                line_text = line.strip()
-                if not line_text: continue
-                
-                analysis += f"🔸 **{{line{i+1}}}:** `{line_text[:40]}{'...' if len(line_text)>40 else ''}`\n   ↳ 🔍 *Type:* "
-                if "http" in line_text or "t.me" in line_text: analysis += "🔗 URL/Link"
-                elif "#" in line_text: analysis += "🏷 Hashtag"
-                elif len(line_text) < 50: analysis += "📝 Short Text / Subject / Title"
-                else: analysis += "📄 Long Description"
-                analysis += "\n\n"
-            
-            analysis += "💡 *Tip: Aap in `{line}` tags ka use apne Custom Format mein kar sakte hain!*\n\n*(Press Start Batch to continue)*"
-            
-            batch_temp.USER_STATE[user_id] = None
-            await message.reply(analysis)
-            return await show_edit_menu(client, message, user_id)
-
-        elif state == "WAIT_LINK":
-            try:
-                name, url = message.text.split(":")
-                data['link_replace'] = {'name': name.strip(), 'url': url.strip()}
-            except: await message.reply("❌ Invalid format! Use `Custom Name : https://link.com`")
         elif state == "WAIT_REPLACE":
             try:
                 pairs = message.text.split(",")
                 for p in pairs:
                     old, new = p.split(":")
                     data['replace'][old.strip()] = new.strip()
-            except: await message.reply("❌ Invalid format! Use `Old:New, Old2:New2`")
+            except: return await message.reply("❌ Invalid format! Use `Old:New, Old2:New2`")
+            
         elif state == "WAIT_DELETE":
             words = message.text.split(",")
             for w in words: data['delete'].append(w.strip())
             
-        if state not in ["WAIT_FORMAT_LINK"]: # handled above
-            batch_temp.USER_STATE[user_id] = None
-            await message.delete() 
-            return await show_edit_menu(client, message, user_id)
+        batch_temp.USER_STATE[user_id] = None
+        await message.delete() 
+        return await show_edit_menu(client, message, user_id)
 
     # --- MAIN LINK INTERCEPTOR ---
     if "https://t.me/" in message.text:
@@ -325,7 +334,6 @@ async def handle_text_and_links(client: Client, message: Message):
             'link_replace': None, 
             'replace': {},
             'delete': [],
-            'format': '{caption}',
             'failed_links': []
         }
         await show_edit_menu(client, message, user_id)
@@ -352,27 +360,18 @@ async def callback_handler(client: Client, query):
     elif data == "back_start":
         await query.message.edit_text(get_welcome_text(query.from_user.first_name), reply_markup=InlineKeyboardMarkup(get_home_buttons()))
     
-    # --- EDIT MENU CALLBACKS ---
     elif data.startswith("edit_"):
         action = data.split("_")[1]
         
         if action == "link":
-            batch_temp.USER_STATE[user_id] = "WAIT_LINK"
-            await query.message.reply("🔗 **Send Custom Link Format:**\nSabhi purane links is naye naam aur link se badal jayenge.\n\nFormat: `Custom Name : https://yourlink.com`\n\n*(Type 'cancel' to abort)*")
+            batch_temp.USER_STATE[user_id] = "WAIT_LINK_NAME"
+            await query.message.reply("🔗 **Custom Link Setup (Step 1 of 2)**\n\nSabse pehle mujhe us link ka **NAAM** bhejein (Jaise: `Join PRO Jaat`).\n\n*(Type 'cancel' to abort)*")
         elif action == "replace":
             batch_temp.USER_STATE[user_id] = "WAIT_REPLACE"
             await query.message.reply("🔄 **Send Words to Replace:**\nFormat: `OldWord:NewWord, BadWord:GoodWord`\n\n*(Type 'cancel' to abort)*")
         elif action == "delete":
             batch_temp.USER_STATE[user_id] = "WAIT_DELETE"
             await query.message.reply("🗑 **Send Words to Delete:**\nFormat: `Word1, Word2, Link.com`\n\n*(Type 'cancel' to abort)*")
-        elif action == "format":
-            batch_temp.USER_STATE[user_id] = "WAIT_FORMAT_LINK"
-            await query.message.reply("📝 **SMART FORMAT SETUP:**\n\nSabse pehle mujhe restricted channel se **koi ek LINK bhejein** (ताकि मैं असली कैप्शन निकाल सकूँ)।\n\n*(Type 'cancel' to abort)*")
-        await query.answer()
-
-    elif data == "format_info":
-        batch_temp.USER_STATE[user_id] = "WAIT_INFO_LINK"
-        await query.message.reply("🧠 **FORMAT AI ANALYZER:**\n\nMujhe restricted channel se **ek LINK bhejein**.\nMain uski poori details aur format structure nikal kar duga!\n\n*(Type 'cancel' to abort)*")
         await query.answer()
 
     elif data == "start_processing":
@@ -467,22 +466,17 @@ async def handle_file_transfer(client, acc, message, user_id, chatid, msgid, b_d
     raw_caption = msg.caption.html if msg.caption else (msg.text.html if msg.text else "")
     if not raw_caption and msg.caption: raw_caption = msg.caption 
     
-    if raw_caption or b_data['format'] != "{caption}":
-        text_data = b_data['format']
+    if raw_caption:
+        # MAGIC: AI Parser will auto-format the caption
+        text_data = parse_pro_caption(raw_caption)
         
-        # --- Auto-Detect Tags ---
-        clean_lines = (msg.caption if msg.caption else (msg.text if msg.text else "")).split('\n')
-        for i in range(1, 10): # support up to 9 lines
-            line_val = clean_lines[i-1].strip() if len(clean_lines) >= i else ""
-            text_data = text_data.replace(f"{{line{i}}}", line_val)
-
-        text_data = text_data.replace("{caption}", raw_caption)
-        
-        # --- Replace & Delete ---
-        for old, new in b_data['replace'].items(): text_data = text_data.replace(old, new)
+        # --- Apply Delete ---
         for word in b_data['delete']: text_data = text_data.replace(word, "")
             
-        # --- Smart Link Replacer ---
+        # --- Apply Replace ---
+        for old, new in b_data['replace'].items(): text_data = text_data.replace(old, new)
+            
+        # --- Apply Link Replacer ---
         if b_data['link_replace']:
             name = b_data['link_replace']['name']
             url = b_data['link_replace']['url']
