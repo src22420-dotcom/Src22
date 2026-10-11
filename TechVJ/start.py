@@ -18,7 +18,7 @@ from bot import TechVJUser
 # ==========================================
 # 👑 ADMIN SYSTEM (Yahan Apni ID Daalein)
 # ==========================================
-ADMIN_IDS = [1234567890, 9876543210] # <--- YAHAN APNI NUMBER WALI ID DAALEIN
+ADMIN_IDS = [5450796741, 9876543210] # <--- YAHAN APNI NUMBER WALI ID DAALEIN
 
 # ==========================================
 # TEMPORARY MEMORY & STATES
