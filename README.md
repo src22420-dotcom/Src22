@@ -1,7 +1,7 @@
 
 </p>
 <h1 align="center">
-  VJ Save Restricted Bot
+  Save Restricted Bot
 </h1>
 
 
