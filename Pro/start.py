@@ -344,7 +344,7 @@ async def callback_handler(client: Client, query):
     
     if data == "start_login":
         await query.answer("Starting Login Process...")
-        from TechVJ.generate import main as login_process
+        from Pro.generate import main as login_process
         mock_msg = query.message
         mock_msg.from_user = query.from_user
         mock_msg.text = "/login"
@@ -399,7 +399,7 @@ async def process_batch(client, message, user_id, links_list):
         api_hash = await db.get_api_hash(user_id)
         acc = Client("saverestricted", session_string=user_data, api_hash=api_hash, api_id=api_id)
         await acc.connect()
-    else: acc = TechVJUser
+    else: acc = ProUser
 
     batch_temp.IS_BATCH[user_id] = False
     success = 0
