@@ -1,6 +1,4 @@
 
-<p align="center">
-  <img src="https://i.ibb.co/dJ0gpJf1/photo-2025-06-16-12-07-05-7516517596376596504.jpg" alt="VJ Save Restricted Bot Logo">
 </p>
 <h1 align="center">
   VJ Save Restricted Bot
@@ -13,20 +11,18 @@
 
 ---
 
-<b>Watch Video Tutorial - [Click Here](https://youtu.be/BFEvSX5vIMg)</b>
-
 ---
 
 ## Variables
 
 - `LOGIN_SYSTEM` : Set True or False As per your need.
 - `STRING_SESSION` : Your Tg Account Session String, if login is False then this variable is compulsory to fill. ( ⚠️ Warning - Give string session on deploy website environment variable, don't give in repo )
-- `API_HASH` : Your API Hash From [Telegram Website](https://my.telegram.org) Watch [Video Tutorial](https://youtu.be/LDtgwpI-N7M)
-- `API_ID` : Your API ID From [Telegram Website](https://my.telegram.org) Watch [Video Tutorial](https://youtu.be/LDtgwpI-N7M)
+- `API_HASH` : Your API Hash From [Telegram Website](https://my.telegram.org) 
+- `API_ID` : Your API ID From [Telegram Website](https://my.telegram.org) 
 - `BOT_TOKEN` : Your Bot Token From [BotFather](https://telegram.me/BotFather) ( ⚠️ Warning - Give Bot Token on deploy website environment variable, don't give in repo )
 - `ADMINS` : Your Admin Id For Broadcasting Message
 - `CHANNEL_ID` : Your Channel Id On Which Bot Upload Downloaded Content. ( And Make Your Bot Admin In This Channel With Full Rights )
-- `DB_URI` : Your Mongodb Database Url From [Mongodb](https://mongodb.com) Watch [Video Tutorial](https://youtu.be/DAHRmFdw99o) ( ⚠️ Warning - Give Db Url on deploy website environment variable, don't give in repo )
+- `DB_URI` : Your Mongodb Database Url From [Mongodb](https://mongodb.com) ( ⚠️ Warning - Give Db Url on deploy website environment variable, don't give in repo )
 - `WAITING_TIME` : Increase Time To Avoid Spamming, Floodwait and Tg Account Ban Issue.
 - `ERROR_MESSAGE` : Set True Or False, If You Want Error Message Then True Else False.
 
@@ -78,8 +74,3 @@ https://t.me/c/xxxx/101 - 120
 _note that space in between doesn't matter_
 
 ---
-
-## Credits
-
-- <b>Thanks To [BipinKrish](https://github.com/bipinkrish) For Base Repo
-- Thanks To [Tech VJ](https://github.com/VJBots) For Modification.</b>
