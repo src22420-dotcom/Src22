@@ -2,20 +2,20 @@ from pyrogram import Client
 from config import API_ID, API_HASH, BOT_TOKEN, STRING_SESSION, LOGIN_SYSTEM
 
 if STRING_SESSION is not None and LOGIN_SYSTEM == False:
-	TechVJUser = Client("TechVJ", api_id=API_ID, api_hash=API_HASH, session_string=STRING_SESSION)
-	TechVJUser.start()
+	ProUser = Client("Pro", api_id=API_ID, api_hash=API_HASH, session_string=STRING_SESSION)
+	ProUser.start()
 else:
-    TechVJUser = None
+    ProUser = None
 
 class Bot(Client):
 
     def __init__(self):
         super().__init__(
-            "techvj login",
+            "pro login",
             api_id=API_ID,
             api_hash=API_HASH,
             bot_token=BOT_TOKEN,
-            plugins=dict(root="TechVJ"),
+            plugins=dict(root="Pro"),
             workers=150,
             sleep_threshold=5
         )
@@ -24,7 +24,7 @@ class Bot(Client):
     async def start(self):
             
         await super().start()
-        print('Bot Started Powered By @VJ_Bots')
+        print('Bot Started Powered By @Pro_Bots')
 
     async def stop(self, *args):
 
