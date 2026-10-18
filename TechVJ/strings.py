@@ -1,7 +1,3 @@
-# Don't Remove Credit Tg - @VJ_Bots
-# Subscribe YouTube Channel For Amazing Bot https://youtube.com/@Tech_VJ
-# Ask Doubt on telegram @KingVJ01
-
 HELP_TXT = """**🌟 Help Menu** 
 
 **__FOR PRIVATE CHATS__**
@@ -31,6 +27,3 @@ https://t.me/c/xxxx/101 - 120
 
 __note that space in between doesn't matter__"""
        
-# Don't Remove Credit Tg - @VJ_Bots
-# Subscribe YouTube Channel For Amazing Bot https://youtube.com/@Tech_VJ
-# Ask Doubt on telegram @KingVJ01
