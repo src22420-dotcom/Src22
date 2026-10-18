@@ -8,8 +8,8 @@ from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, User
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message, BotCommand
 from config import API_ID, API_HASH, ERROR_MESSAGE, LOGIN_SYSTEM, STRING_SESSION, CHANNEL_ID, WAITING_TIME
 from database.db import db
-from TechVJ.strings import HELP_TXT
-from bot import TechVJUser
+from Pro.strings import HELP_TXT
+from bot import ProUser
 
 # ==========================================
 # 👑 ADMIN SYSTEM (Yahan Apni ID Daalein)
